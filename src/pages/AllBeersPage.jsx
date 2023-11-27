@@ -59,7 +59,8 @@ function AllBeersPage() {
   const handleInputChange = (event) => {
     setQueryBeers(event.target.value);
   };
-  const beersToDisplay = filteredBeers.length >= 1 ? filteredBeers : allBeers;
+
+  const beersToDisplay = filteredBeers !== null ? filteredBeers : allBeers;
   return (
     <div>
       <label htmlFor="search">Search</label>
