@@ -4,6 +4,8 @@ import { Link, NavLink } from "react-router-dom";
 
 function AllBeersPage() {
   const [allBeers, setAllBeers] = useState(null);
+  const [filteredBeers, setFilteredBeers] = useState(null);
+  const [queryBeers, setQueryBeers] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   const getBeersData = async () => {
@@ -16,6 +18,19 @@ function AllBeersPage() {
       setIsLoading(false);
     } catch (error) {}
   };
+  const getBeersDataQuery = async () => {
+    try {
+      const response = await axios.get(
+        `https://ih-beers-api2.herokuapp.com/beers/search?q=${queryBeers}`
+      );
+      setFilteredBeers(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getBeersDataQuery();
+  }, [queryBeers]);
 
   useEffect(() => {
     getBeersData();
@@ -41,9 +56,20 @@ function AllBeersPage() {
     marginLeft: "50px",
   };
   const blackText = "Created by:";
+  const handleInputChange = (event) => {
+    setQueryBeers(event.target.value);
+  };
+  const beersToDisplay = filteredBeers.length >= 1 ? filteredBeers : allBeers;
   return (
     <div>
-      {allBeers.map((eachBeer) => {
+      <label htmlFor="search">Search</label>
+      <input
+        type="text"
+        name="search"
+        value={queryBeers}
+        onChange={handleInputChange}
+      />
+      {beersToDisplay.map((eachBeer) => {
         return (
           <div key={eachBeer._id} style={AllBeersStyles}>
             <div style={infoCard}>
